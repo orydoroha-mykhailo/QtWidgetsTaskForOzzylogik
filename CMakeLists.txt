@@ -17,6 +17,20 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
+        database_manager.cpp
+        database_manager.h
+        countries_table_manager.cpp
+        countries_table_manager.h
+        operators_table_manager.cpp
+        operators_table_manager.h
+        operator_editor_dialog.cpp
+        operator_editor_dialog.h
+        data_model.cpp
+        data_model.h
+        data_item.cpp
+        data_item.h
+        icon_delegate.cpp
+        icon_delegate.h
         Assets.qrc
 )
 
