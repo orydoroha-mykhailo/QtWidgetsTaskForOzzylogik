@@ -18,10 +18,20 @@ DatabaseManager::DatabaseManager(const QString &path /* = DATABASE_FILENAME */)
     }
 }
 
-DatabaseManager &DatabaseManager::instance()
+DatabaseManager& DatabaseManager::instance()
 {
     static DatabaseManager singleton;
     return singleton;
+}
+
+CountriesTableManager& DatabaseManager::countries() const
+{
+    return m_CountriesTableManager;
+}
+
+OperatorsTableManager& DatabaseManager::operators() const
+{
+    return m_OperatorsTableManager;
 }
 
 DatabaseManager::~DatabaseManager()

@@ -108,13 +108,60 @@ OperatorEditorDialog::OperatorEditorDialog(const QModelIndex& index /* = {} */,
 
 void OperatorEditorDialog::onSaveClicked()
 {
+    auto fullName = QString("%1 (%2, %3)").arg(m_nameEdit->text(),
+                                               m_mccEdit->text(),
+                                               m_mncEdit->text());
 
+    if(m_index.isValid())
+    {
+        m_model->setData(m_index, fullName);
+        m_model->setData(m_index, m_nameEdit->text(), DataModel::Name);
+
+        m_DatabaseManager.operators().updateData(m_index);
+    }
+    else
+    {
+        m_DatabaseManager.operators().insertData({m_mccEdit->text(),
+                                                  m_mncEdit->text(),
+                                                  m_nameEdit->text()});
+        // TODO don`t work
+//        m_model->updateModel();
+    }
+
+    close();
 }
 
 void OperatorEditorDialog::loadIcon(const QString &mcc)
 {
+    auto query = m_DatabaseManager.countries().readData(mcc);
+    query.first();
 
+    if(query.isValid())
+    {
+        int codeIndex = query.record().indexOf("Code");
+
+        if(codeIndex != -1)
+        {
+            auto code = query.value(codeIndex).toString();
+            auto iconPath = QString(":/icons/Countries/%1.png").arg(code);
+            auto icon = QPixmap(iconPath);
+
+            if(!icon.isNull())
+            {
+                m_iconCountry->setPixmap(icon);
+                setWindowIcon(QIcon(iconPath));
+            }
+
+            return;
+        }
+    }
+
+    m_iconCountry->setPixmap(qApp->style()->standardPixmap(
+                                 QStyle::SP_MessageBoxQuestion));
+    setWindowIcon(qApp->style()->standardIcon(
+                      QStyle::SP_MessageBoxQuestion));
 }
+
 
 bool OperatorEditorDialog::checkEmptyFields() const
 {
